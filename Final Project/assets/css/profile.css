@@ -1,0 +1,16 @@
+.profile-card {
+    margin-top: 20px;
+}
+
+.profile-card img {
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.profile-card .profile-header {
+    text-align: center;
+}
+
+.profile-card .profile-info {
+    margin-top: 20px;
+}
