@@ -47,6 +47,13 @@ if ($user) {
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
 switch ($action) {
+    case 'edit-admins':
+        if ($_SESSION['role'] === 'Admin') {
+            editAdmins();
+        } else {
+            unauthorizedAccess();
+        }
+        break;
     case 'manage-activities':
         if ($_SESSION['role'] === 'Admin') {
             manageActivities();
@@ -137,6 +144,12 @@ function getGuideEvents($user_id)
     return $result->num_rows > 0 ? $result->fetch_assoc()['Responsible_events'] : null;
 }
 
+function editAdmins()
+{
+?>
+    
+<?php
+}
 function manageActivities()
 {
     echo '<h1>Manage Activities</h1>';

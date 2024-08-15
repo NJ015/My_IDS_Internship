@@ -1,6 +1,9 @@
 <?php
 session_start();
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION["role"]) && $_SESSION["role"]==="Admin") {
+    $isAdmin = true;
+}
+elseif (isset($_SESSION['user_id'])) {
     header("Location: profile.php");
     exit();
 }
@@ -54,7 +57,10 @@ function unsetValues()
                                 <option value="">Select Role</option>
                                 <option value="Member">Member</option>
                                 <option value="Guide">Guide</option>
-                                <option value="Admin">Admin</option>
+                                <?php if ($isAdmin) {
+                                ?>
+                                    <option value="Admin">Admin</option>
+                                <?php } ?>
                             </select>
                             <div class="input-group-append">
                                 <div class="input-group-text">
