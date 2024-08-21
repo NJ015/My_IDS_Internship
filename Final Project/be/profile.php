@@ -44,72 +44,72 @@ if ($user) {
     exit();
 }
 
-$action = isset($_GET['action']) ? $_GET['action'] : '';
+// $action = isset($_GET['action']) ? $_GET['action'] : '';
 
-switch ($action) {
-    case 'edit-admins':
-        if ($_SESSION['role'] === 'Admin') {
-            editAdmins();
-        } else {
-            unauthorizedAccess();
-        }
-        break;
-    case 'manage-activities':
-        if ($_SESSION['role'] === 'Admin') {
-            manageActivities();
-        } else {
-            unauthorizedAccess();
-        }
-        break;
-    case 'edit-members':
-        if ($_SESSION['role'] === 'Admin') {
-            editMembers();
-        } else {
-            unauthorizedAccess();
-        }
-        break;
-    case 'edit-guides':
-        if ($_SESSION['role'] === 'Admin') {
-            editGuides();
-        } else {
-            unauthorizedAccess();
-        }
-        break;
-    case 'manage-events':
-        if ($_SESSION['role'] === 'Admin') {
-            manageEvents();
-        } else {
-            unauthorizedAccess();
-        }
-        break;
-    case 'view-timeline':
-        viewTimeline();
-        break;
-    case 'view-activities':
-        if ($_SESSION['role'] === 'Member') {
-            viewActivities();
-        } else {
-            unauthorizedAccess();
-        }
-        break;
-    case 'edit-settings':
-        if ($_SESSION['role'] === 'Member' || $_SESSION['role'] === 'Guide') {
-            editSettings();
-        } else {
-            unauthorizedAccess();
-        }
-        break;
-    case 'view-guiding-activities':
-        if ($_SESSION['role'] === 'Guide') {
-            viewGuidingActivities();
-        } else {
-            unauthorizedAccess();
-        }
-        break;
-        // default:
-        //     echo "Invalid action.";
-        //     break;
-}
+// switch ($action) {
+//     case 'edit-admins':
+//         if ($_SESSION['role'] === 'Admin') {
+//             editAdmins();
+//         } else {
+//             unauthorizedAccess();
+//         }
+//         break;
+//     case 'manage-activities':
+//         if ($_SESSION['role'] === 'Admin') {
+//             manageActivities();
+//         } else {
+//             unauthorizedAccess();
+//         }
+//         break;
+//     case 'edit-members':
+//         if ($_SESSION['role'] === 'Admin') {
+//             editMembers();
+//         } else {
+//             unauthorizedAccess();
+//         }
+//         break;
+//     case 'edit-guides':
+//         if ($_SESSION['role'] === 'Admin') {
+//             editGuides();
+//         } else {
+//             unauthorizedAccess();
+//         }
+//         break;
+//     case 'manage-events':
+//         if ($_SESSION['role'] === 'Admin') {
+//             manageEvents();
+//         } else {
+//             unauthorizedAccess();
+//         }
+//         break;
+//     case 'view-timeline':
+//         viewTimeline();
+//         break;
+//     case 'view-activities':
+//         if ($_SESSION['role'] === 'Member') {
+//             viewActivities();
+//         } else {
+//             unauthorizedAccess();
+//         }
+//         break;
+//     case 'edit-settings':
+//         if ($_SESSION['role'] === 'Member' || $_SESSION['role'] === 'Guide') {
+//             editSettings();
+//         } else {
+//             unauthorizedAccess();
+//         }
+//         break;
+//     case 'view-guiding-activities':
+//         if ($_SESSION['role'] === 'Guide') {
+//             viewGuidingActivities();
+//         } else {
+//             unauthorizedAccess();
+//         }
+//         break;
+//         // default:
+//         //     echo "Invalid action.";
+//         //     break;
+// }
 
 function getUserById($user_id)
 {
@@ -146,10 +146,56 @@ function getGuideEvents($user_id)
 
 function editAdmins()
 {
+    global $conn;
+
+    $sql = "SELECT USERS.ID, FirstName, LastName, Email
+            FROM USERS 
+            INNER JOIN ADMIN ON USERS.ID = ADMIN.UserID";
+
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
 ?>
-    
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                while ($row = $result->fetch_assoc()) {
+                ?>
+                    <tr>
+                        <td><?php echo $row['FirstName'] . ' ' . $row['LastName']; ?></td>
+                        <td><?php echo $row['Email']; ?></td>
+                        <td>
+
+                            <form method="POST" action="../be/delete_admins.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+
+                        </td>
+                    </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    <?php
+    } else {
+    ?>
+        <p>No admins found.</p>
 <?php
+    }
 }
+
+
+
+
 function manageActivities()
 {
     echo '<h1>Manage Activities</h1>';

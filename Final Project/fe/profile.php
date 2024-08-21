@@ -6,11 +6,24 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+if (isset($_SESSION['success_msg'])) {
+    echo '<div style="background-color: #d4edda; color: #155724; padding: 10px;">';
+    echo $_SESSION['success_msg'];
+    echo '</div>';
+    unset($_SESSION['success_msg']);
+}
 
-// Define the tabs for each user type
+if (isset($_SESSION['error_msg'])) {
+    echo '<div style="background-color: #f8d7da; color: #721c24; padding: 10px;">';
+    echo $_SESSION['error_msg'];
+    echo '</div>';
+    unset($_SESSION['error_msg']);
+}
+
 $tabs = array(
     'Admin' => array(
         'Activity' => 'manage-activities',
+        'Admins' => 'edit-admins',
         'Members' => 'edit-members',
         'Guides' => 'edit-guides',
         'Events' => 'manage-events',
@@ -50,7 +63,6 @@ $role = $_SESSION["role"];
             <!-- Brand Logo -->
             <a href="index.php" class="brand-link">
                 <img src="../adminlte/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
                 <span class="brand-text font-weight-light">Activity Club</span>
             </a>
             <!-- Sidebar -->
@@ -134,52 +146,37 @@ $role = $_SESSION["role"];
                             <div class="card">
                                 <div class="card-header p-2">
                                     <ul class="nav nav-pills">
-                                        <?php foreach ($tabs[$role] as $tab => $url) : ?>
+                                        <?php foreach ($tabs[$role] as $tab => $url) { ?>
                                             <li class="nav-item">
-                                                <a class="nav-link <?php echo $action === $url ? 'active' : ''; ?>" href="?action=<?php echo $url; ?>" data-toggle="tab"><?php echo $tab; ?></a>
+                                                <a class="nav-link" href="#<?php echo strtolower(str_replace(' ', '-', $tab)); ?>" data-toggle="tab"><?php echo $tab; ?></a>
                                             </li>
-                                        <?php endforeach; ?>
+                                        <?php } ?>
                                     </ul>
                                 </div>
                                 <div class="card-body">
                                     <div class="tab-content">
-                                        <?php foreach ($tabs[$role] as $tab => $url) : ?>
-                                            <div class="tab-pane <?php echo $action === $url ? 'active' : ''; ?>" id="<?php echo strtolower(str_replace(' ', '-', $tab)); ?>">
-                                                <?php if ($action === 'manage-activities') : ?>
-                                                    <?php // Call the backend function to manage activities 
-                                                    ?>
-                                                    <p>Content for Manage Activities</p>
-                                                <?php elseif ($action === 'edit-members') : ?>
-                                                    <?php // Call the backend function to edit members 
-                                                    ?>
-                                                    <p>Content for Edit Members</p>
-                                                <?php elseif ($action === 'edit-guides') : ?>
-                                                    <?php // Call the backend function to edit guides 
-                                                    ?>
-                                                    <p>Content for Edit Guides</p>
-                                                <?php elseif ($action === 'manage-events') : ?>
-                                                    <?php // Call the backend function to manage events 
-                                                    ?>
-                                                    <p>Content for Manage Events</p>
-                                                <?php elseif ($action === 'view-timeline') : ?>
-                                                    <?php // Call the backend function to view timeline 
-                                                    ?>
-                                                    <p>Content for View Timeline</p>
-                                                <?php elseif ($action === 'view-activities') : ?>
-                                                    <?php // Call the backend function to view activities 
-                                                    ?>
-                                                    <p>Content for View Activities</p>
-                                                <?php elseif ($action === 'edit-settings') : ?>
-                                                    <?php // Call the backend function to edit settings 
-                                                    ?>
-                                                    <p>Content for Edit Settings</p>
-                                                <?php elseif ($action === 'view-guiding-activities') : ?>
-                                                    <?php // Call the backend function to view guiding activities 
-                                                    ?>
-                                                    <p>Content for View Guiding Activities</p>
-                                                <?php endif; ?>
+                                        <?php foreach ($tabs[$role] as $tab => $url) { ?>
+                                            <div class="tab-pane" id="<?php echo strtolower(str_replace(' ', '-', $tab)); ?>">
+                                                <?php
+                                                if ($tab === 'Admins') { ?>
+                                                    <p>Content for Manage Admins</p>
+                                                    <!-- <div>
+                                                        <form action="../be/profile.php">
+                                                            <label for="crud">Action:</label>
+                                                            <select name="crud" id="crud">
+                                                                <option value="edit">Edit an Admin</option>
+                                                                <option value="delete">Delete an Admin</option>
+                                                            </select>
+                                                            <input type="hidden" name="action" value="edit-admins">
+                                                            <button type="submit">Submit<?php //$action = "edit-admins" 
+                                                                                        ?></button>
+                                                        </form>
+                                                    </div> -->
+                                                <?php
+                                                    editAdmins();
+                                                } ?>
                                             </div>
-                                        <?php endforeach; ?>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>

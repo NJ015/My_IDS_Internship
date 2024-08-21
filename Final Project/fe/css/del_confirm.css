@@ -1,0 +1,65 @@
+/* body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+} */
+/* 
+.confirmation-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.confirmation-box h2 {
+    margin-bottom: 20px;
+}
+
+.confirmation-box form {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirmation-box button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+} */
+
+/* form{
+    display: flex;
+} */
+.delb {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: 15%;
+}
+
+.col-4{
+    max-width: max-content;
+}
+
+button[name="confirm_delete"][value="no"] {
+  background-color: #dc3545;
+  color: #fff;
+  border-color: #dc3545;
+}
+
+button[name="confirm_delete"][value="no"]:hover {
+  background-color: #b53d39;
+}

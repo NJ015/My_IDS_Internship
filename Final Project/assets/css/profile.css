@@ -14,3 +14,11 @@
 .profile-card .profile-info {
     margin-top: 20px;
 }
+
+input[type="select"] {
+    border: 0.1px solid black !important;
+}
+
+input[type="submit"] {
+    border: 0px !important;
+}
