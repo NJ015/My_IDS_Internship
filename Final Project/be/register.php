@@ -1,6 +1,7 @@
 <?php
 session_start();
 //add l validation lal inputs important!!!!!!!!!!!!
+//fix the date-diff/age stuff important!!!!!!!!!!!!
 
 require_once 'dbconfig.php';
 
@@ -31,6 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: ../fe/register.php");
         exit();
     }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['e_error'] = "Invalid email format";
+        setvalues();
+        header("Location: ../fe/register.php");
+        exit();
+    }
+    
 
     if ($_POST["password"] !== $_POST["confirmPassword"]) {
         $_SESSION['cpass_error'] = "Passwords do not match";
@@ -43,9 +51,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dob = $_POST['dob'];
     $joining_date = date('Y-m-d');
     $profession = isset($_POST['profession']) ? $_POST['profession'] : null;
-    $photo = isset($_POST['photo']) ? $_POST['photo'] : "https://robohash.org/" . urlencode($email);
+    $photo = "https://robohash.org/" . urlencode($email);
+    
     $emergency_number = isset($_POST['emergency_number']) ? $_POST['emergency_number'] : null;
     $phone_nb = $_POST['phone_nb'];
+    if (!preg_match('/^\+?(\d)+$/', $phone_nb)) {
+        $error_message = "Phone numbers must contain only numbers or (+) sign.";
+        $_SESSION['phone_error'] = "Invalid phone number";
+        setvalues();
+        header("Location: ../fe/register.php");
+        exit();
+    }
+    if (!preg_match('/^\+?(\d)+$/', $emergency_number)) {
+        $error_message = "Phone numbers must contain only numbers or (+) sign.";
+        $_SESSION['em_nb_error'] = "Invalid phone number";
+        setvalues();
+        header("Location: ../fe/register.php");
+        exit();
+    }
+
     $nationality = isset($_POST['nationality']) ? $_POST['nationality'] : null;
 
 
@@ -99,33 +123,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 function setvalues()
 {
-    $_SESSION["role"] = $_POST['role'];
-    $_SESSION["gender"] = $_POST['gender'];
-    $_SESSION["firstName"] = $_POST['firstName'];
-    $_SESSION["middleName"] = $_POST['middleName'];
-    $_SESSION["lastName"] = $_POST['lastName'];
-    $_SESSION["email"] = $_POST['email'];
-    $_SESSION["dob"] = $_POST['dob'];
-    $_SESSION["profession"] = ($_POST['profession']);
-    $_SESSION["photo"] = ($_POST['photo']);
-    $_SESSION["emergency_number"] = ($_POST['emergency_number']);
-    $_SESSION["phone_nb"] = $_POST['phone_nb'];
-    $_SESSION["nationality"] = ($_POST['nationality']);
+    $_SESSION["role1"] = $_POST['role'];
+    $_SESSION["gender1"] = $_POST['gender'];
+    $_SESSION["firstName1"] = $_POST['firstName'];
+    $_SESSION["middleName1"] = $_POST['middleName'];
+    $_SESSION["lastName1"] = $_POST['lastName'];
+    $_SESSION["email1"] = $_POST['email'];
+    $_SESSION["dob1"] = $_POST['dob'];
+    $_SESSION["profession1"] = $_POST['profession'];
+    $_SESSION["photo1"] = $_POST['photo'];
+    $_SESSION["emergency_number1"] = $_POST['emergency_number'];
+    $_SESSION["phone_nb1"] = $_POST['phone_nb'];
+    $_SESSION["nationality1"] = $_POST['nationality'];
 }
+
 
 
 function unsetValues()
 {
-    unset($_SESSION["role"]);
-    unset($_SESSION["gender"]);
-    unset($_SESSION["firstName"]);
-    unset($_SESSION["middleName"]);
-    unset($_SESSION["lastName"]);
-    unset($_SESSION["email"]);
-    unset($_SESSION["dob"]);
-    unset($_SESSION["profession"]);
-    unset($_SESSION["photo"]);
-    unset($_SESSION["emergency_number"]);
-    unset($_SESSION["phone_nb"]);
-    unset($_SESSION["nationality"]);
+    unset($_SESSION["role1"]);
+    unset($_SESSION["gender1"]);
+    unset($_SESSION["firstName1"]);
+    unset($_SESSION["middleName1"]);
+    unset($_SESSION["lastName1"]);
+    unset($_SESSION["email1"]);
+    unset($_SESSION["dob1"]);
+    unset($_SESSION["profession1"]);
+    unset($_SESSION["photo1"]);
+    unset($_SESSION["emergency_number1"]);
+    unset($_SESSION["phone_nb1"]);
+    unset($_SESSION["nationality1"]);
 }
+

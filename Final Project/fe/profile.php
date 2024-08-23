@@ -50,10 +50,11 @@ $role = $_SESSION["role"];
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | User Profile</title>
+    <title>User Profile</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="../adminlte/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="../adminlte/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="css/profile.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -79,14 +80,14 @@ $role = $_SESSION["role"];
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <?php foreach ($tabs[$role] as $tab => $url) : ?>
+                        <?php foreach ($tabs[$role] as $tab => $url) { ?>
                             <li class="nav-item">
                                 <a href="<?php echo $url; ?>" class="nav-link">
                                     <i class="nav-icon fas fa-<?php echo $tab === 'Activity' ? 'calendar' : ($tab === 'Timeline' ? 'history' : 'user'); ?>"></i>
                                     <p><?php echo $tab; ?></p>
                                 </a>
                             </li>
-                        <?php endforeach; ?>
+                        <?php } ?>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -109,6 +110,7 @@ $role = $_SESSION["role"];
                                 ?>
                                     <li class="breadcrumb-item"><a href="register.php">Add Admin</a></li>
                                 <?php } ?>
+
                                 <li class="breadcrumb-item"><a href="../be/logout.php">Logout</a></li>
                             </ol>
                         </div>
@@ -126,19 +128,98 @@ $role = $_SESSION["role"];
                                     <div class="text-center">
                                         <img class="profile-user-img img-fluid img-circle" src="<?php echo $_SESSION["photo"]; ?>" alt="User profile picture">
                                     </div>
-                                    <h3 class="profile-username text-center"><?php echo $_SESSION["firstName"] . " " . $_SESSION["middleName"] . " " . $_SESSION["lastName"]; ?></h3>
-                                    <p class="text-muted text-center"><?php echo $_SESSION["profession"]; ?></p>
+                                    <h3 class="profile-username text-center mb-3"><?php echo $_SESSION["firstName"] . " " . $_SESSION["middleName"] . " " . $_SESSION["lastName"]; ?></h3>
                                     <ul class="list-group list-group-unbordered mb-3">
                                         <li class="list-group-item">
-                                            <b>Email</b> <a class="float-right"><?php echo $_SESSION["email"]; ?></a>
+                                            <b>Role</b>
+                                            <span class="float-right">
+                                                <?php echo $_SESSION['role']; ?>
+                                                <a href="#" class="ml-5"></a>
+                                            </span>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Phone Number</b> <a class="float-right"><?php echo $_SESSION["phone_nb"]; ?></a>
+                                            <b>Profession</b>
+                                            <span class="float-right">
+                                                <?php echo $_SESSION['profession']; ?>
+                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                    <input type="hidden" name="field" value="profession">
+                                                    <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
+                                                </form>
+                                            </span>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Emergency Number</b> <a class="float-right"><?php echo $_SESSION["em_nb"]; ?></a>
+                                            <b>Date of Birth</b>
+                                            <span class="float-right">
+                                                <?php echo $_SESSION['dob']; ?>
+                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                    <input type="hidden" name="field" value="dob">
+                                                    <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
+                                                </form>
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Nationality</b>
+                                            <span class="float-right">
+                                                <?php echo $_SESSION['nationality']; ?>
+                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                    <input type="hidden" name="field" value="nationality">
+                                                    <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
+                                                </form>
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Joining Date</b>
+                                            <span class="float-right">
+                                                <?php echo $_SESSION['joining_date']; ?>
+                                                <a href="#" class="ml-5"></a>
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Email</b>
+                                            <span class="float-right">
+                                                <?php echo $_SESSION["email"]; ?>
+                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                    <input type="hidden" name="field" value="email">
+                                                    <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
+                                                </form>
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Password</b>
+                                            <span class="float-right">
+                                                *********
+                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                    <input type="hidden" name="field" value="password">
+                                                    <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
+                                                </form>
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Phone Number</b>
+                                            <span class="float-right">
+                                                <?php echo $_SESSION["phone_nb"]; ?>
+                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                    <input type="hidden" name="field" value="phone_nb">
+                                                    <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
+                                                </form>
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>Emergency Number</b>
+                                            <span class="float-right">
+                                                <?php echo $_SESSION["em_nb"]; ?>
+                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                    <input type="hidden" name="field" value="em_nb">
+                                                    <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
+                                                </form>
+                                            </span>
                                         </li>
                                     </ul>
+
+
+
+
+
                                 </div>
                             </div>
                         </div>
@@ -158,22 +239,10 @@ $role = $_SESSION["role"];
                                         <?php foreach ($tabs[$role] as $tab => $url) { ?>
                                             <div class="tab-pane" id="<?php echo strtolower(str_replace(' ', '-', $tab)); ?>">
                                                 <?php
-                                                if ($tab === 'Admins') { ?>
-                                                    <p>Content for Manage Admins</p>
-                                                    <!-- <div>
-                                                        <form action="../be/profile.php">
-                                                            <label for="crud">Action:</label>
-                                                            <select name="crud" id="crud">
-                                                                <option value="edit">Edit an Admin</option>
-                                                                <option value="delete">Delete an Admin</option>
-                                                            </select>
-                                                            <input type="hidden" name="action" value="edit-admins">
-                                                            <button type="submit">Submit<?php //$action = "edit-admins" 
-                                                                                        ?></button>
-                                                        </form>
-                                                    </div> -->
-                                                <?php
+                                                if ($tab === 'Admins') {
                                                     editAdmins();
+                                                } elseif ($tab === 'Guides') {
+                                                    editGuides();
                                                 } ?>
                                             </div>
                                         <?php } ?>

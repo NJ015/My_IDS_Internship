@@ -1,4 +1,4 @@
-.profile-card {
+/* .profile-card {
     margin-top: 20px;
 }
 
@@ -13,4 +13,16 @@
 
 .profile-card .profile-info {
     margin-top: 20px;
+} */
+
+@media (min-width: 768px) {
+    .col-md-9 {
+        max-width: 70%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-3 {
+        min-width: 30%;
+    }
 }

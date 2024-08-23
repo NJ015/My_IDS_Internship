@@ -1,0 +1,5 @@
+Guide_Status: 1: Pending
+              0: Accepted
+              2: Rejected
+
+Admin_Position: 0: Highest

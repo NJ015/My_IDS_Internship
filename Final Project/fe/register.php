@@ -1,28 +1,28 @@
 <?php
 session_start();
-if (isset($_SESSION["role"]) && $_SESSION["role"]==="Admin") {
+if (isset($_SESSION["role"]) && $_SESSION["role"] === "Admin") {
     $isAdmin = true;
-}
-elseif (isset($_SESSION['user_id'])) {
+} elseif (isset($_SESSION['user_id'])) {
     header("Location: profile.php");
     exit();
 }
 
 function unsetValues()
 {
-    unset($_SESSION["role"]);
-    unset($_SESSION["gender"]);
-    unset($_SESSION["firstName"]);
-    unset($_SESSION["middleName"]);
-    unset($_SESSION["lastName"]);
-    unset($_SESSION["email"]);
-    unset($_SESSION["dob"]);
-    unset($_SESSION["profession"]);
-    unset($_SESSION["photo"]);
-    unset($_SESSION["emergency_number"]);
-    unset($_SESSION["phone_nb"]);
-    unset($_SESSION["nationality"]);
+    unset($_SESSION["role1"]);
+    unset($_SESSION["gender1"]);
+    unset($_SESSION["firstName1"]);
+    unset($_SESSION["middleName1"]);
+    unset($_SESSION["lastName1"]);
+    unset($_SESSION["email1"]);
+    unset($_SESSION["dob1"]);
+    unset($_SESSION["profession1"]);
+    unset($_SESSION["photo1"]);
+    unset($_SESSION["emergency_number1"]);
+    unset($_SESSION["phone_nb1"]);
+    unset($_SESSION["nationality1"]);
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -53,12 +53,11 @@ function unsetValues()
                     <div class="form-group">
                         <label for="role">Role</label>
                         <div class="input-group mb-3">
-                            <select class="form-control" name="role" id="role" required value="<?php echo isset($_SESSION["role"]) ? $_SESSION["role"] : ""; ?>">
+                            <select class="form-control" name="role" id="role" required value="<?php echo isset($_SESSION['role1']) ? $_SESSION['role1'] : ''; ?>">
                                 <option value="">Select Role</option>
                                 <option value="Member">Member</option>
                                 <option value="Guide">Guide</option>
-                                <?php if ($isAdmin) {
-                                ?>
+                                <?php if ($isAdmin) { ?>
                                     <option value="Admin">Admin</option>
                                 <?php } ?>
                             </select>
@@ -73,7 +72,7 @@ function unsetValues()
                     <div class="form-group">
                         <label for="gender">Gender</label>
                         <div class="input-group mb-3">
-                            <select class="form-control" name="gender" id="gender" required value="<?php echo isset($_SESSION["gender"]) ? $_SESSION["gender"] : ""; ?>">
+                            <select class="form-control" name="gender" id="gender" required value="<?php echo isset($_SESSION['gender1']) ? $_SESSION['gender1'] : ''; ?>">
                                 <option value="">Select Gender</option>
                                 <option value="M">Male</option>
                                 <option value="F">Female</option>
@@ -89,7 +88,7 @@ function unsetValues()
                     <div class="form-group">
                         <label for="firstName">First Name</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="firstName" id="firstName" placeholder="John" required value="<?php echo isset($_SESSION["firstName"]) ? $_SESSION["firstName"] : ""; ?>" />
+                            <input type="text" class="form-control" name="firstName" id="firstName" placeholder="John" required value="<?php echo isset($_SESSION['firstName1']) ? $_SESSION['firstName1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
@@ -101,7 +100,7 @@ function unsetValues()
                     <div class="form-group">
                         <label for="middleName">Middle Name</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="middleName" id="middleName" placeholder="A." value="<?php echo isset($_SESSION["middleName"]) ? $_SESSION["middleName"] : ""; ?>" />
+                            <input type="text" class="form-control" name="middleName" id="middleName" placeholder="A." value="<?php echo isset($_SESSION['middleName1']) ? $_SESSION['middleName1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
@@ -113,7 +112,7 @@ function unsetValues()
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Doe" required value="<?php echo isset($_SESSION["lastName"]) ? $_SESSION["lastName"] : ""; ?>" />
+                            <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Doe" required value="<?php echo isset($_SESSION['lastName1']) ? $_SESSION['lastName1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
@@ -125,15 +124,15 @@ function unsetValues()
                     <div class="form-group">
                         <label for="email">Email</label>
                         <div class="input-group mb-3">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="example@example.com" required value="<?php echo isset($_SESSION["email"]) ? $_SESSION["email"] : ""; ?>" />
+                            <input type="email" class="form-control" name="email" id="email" placeholder="example@example.com" required value="<?php echo isset($_SESSION['email1']) ? $_SESSION['email1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-envelope"></span>
                                 </div>
                             </div>
                         </div>
-                        <span id="emailError" class="error"><?php echo isset($_SESSION["e_error"]) ? $_SESSION["e_error"] : "";
-                                                            unset($_SESSION["e_error"]); ?></span>
+                        <span id="emailError" class="error"><?php echo isset($_SESSION['e_error']) ? $_SESSION['e_error'] : '';
+                                                            unset($_SESSION['e_error']); ?></span>
                     </div>
 
                     <div class="form-group">
@@ -158,38 +157,42 @@ function unsetValues()
                                 </div>
                             </div>
                         </div>
-                        <span id="passwordError" class="error"><?php echo isset($_SESSION["cpass_error"]) ? $_SESSION["cpass_error"] : "";
-                                                                unset($_SESSION["cpass_error"]); ?></span>
+                        <span id="passwordError" class="error"><?php echo isset($_SESSION['cpass_error']) ? $_SESSION['cpass_error'] : '';
+                                                                unset($_SESSION['cpass_error']); ?></span>
                     </div>
 
                     <div class="form-group">
                         <label for="phoneNb">Phone Number</label>
                         <div class="input-group mb-3">
-                            <input type="tel" class="form-control" name="phone_nb" id="phoneNb" placeholder="123-456-7890" required value="<?php echo isset($_SESSION["phone_nb"]) ? $_SESSION["phone_nb"] : ""; ?>" />
+                            <input type="tel" class="form-control" name="phone_nb" id="phoneNb" placeholder="123-456-7890" required value="<?php echo isset($_SESSION['phone_nb1']) ? $_SESSION['phone_nb1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-phone"></span>
                                 </div>
                             </div>
                         </div>
+                        <span id="PhoneError" class="error"><?php echo isset($_SESSION['phone_error']) ? $_SESSION['phone_error'] : '';
+                                                            unset($_SESSION['phone_error']); ?></span>
                     </div>
 
                     <div class="form-group">
                         <label for="emergencyNumber">Emergency Number</label>
                         <div class="input-group mb-3">
-                            <input type="tel" class="form-control" name="emergency_number" id="emergencyNumber" placeholder="123-456-7890" required value="<?php echo isset($_SESSION["emergency_number"]) ? $_SESSION["emergency_number"] : ""; ?>" />
+                            <input type="tel" class="form-control" name="emergency_number" id="emergencyNumber" placeholder="123-456-7890" required value="<?php echo isset($_SESSION['emergency_number1']) ? $_SESSION['emergency_number1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-exclamation-triangle"></span>
                                 </div>
                             </div>
                         </div>
+                        <span id="EmPhoneError" class="error"><?php echo isset($_SESSION['em_nb_error']) ? $_SESSION['em_nb_error'] : '';
+                                                                unset($_SESSION['em_nb_error']); ?></span>
                     </div>
 
                     <div class="form-group">
                         <label for="dob">Date of Birth</label>
                         <div class="input-group mb-3">
-                            <input type="date" class="form-control" name="dob" id="dob" required value="<?php echo isset($_SESSION["dob"]) ? $_SESSION["dob"] : ""; ?>" />
+                            <input type="date" class="form-control" name="dob" id="dob" required value="<?php echo isset($_SESSION['dob1']) ? $_SESSION['dob1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-calendar-alt"></span>
@@ -201,7 +204,7 @@ function unsetValues()
                     <div class="form-group">
                         <label for="profession">Profession</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="profession" id="profession" placeholder="Engineer" required value="<?php echo isset($_SESSION["profession"]) ? $_SESSION["profession"] : ""; ?>" />
+                            <input type="text" class="form-control" name="profession" id="profession" placeholder="Engineer" required value="<?php echo isset($_SESSION['profession1']) ? $_SESSION['profession1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-briefcase"></span>
@@ -213,7 +216,7 @@ function unsetValues()
                     <div class="form-group">
                         <label for="photo">Photo URL</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="photo" id="photo" placeholder="https://robohash.org/robot" value="<?php echo isset($_SESSION["photo"]) ? $_SESSION["photo"] : ""; ?>" />
+                            <input type="text" class="form-control" name="photo" id="photo" placeholder="https://robohash.org/robot" value="<?php echo isset($_SESSION['photo1']) ? $_SESSION['photo1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-briefcase"></span>
@@ -225,7 +228,7 @@ function unsetValues()
                     <div class="form-group">
                         <label for="nationality">Nationality</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="nationality" id="nationality" placeholder="Lebanese" required value="<?php echo isset($_SESSION["nationality"]) ? $_SESSION["nationality"] : ""; ?>" />
+                            <input type="text" class="form-control" name="nationality" id="nationality" placeholder="Lebanese" required value="<?php echo isset($_SESSION['nationality1']) ? $_SESSION['nationality1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-briefcase"></span>
@@ -234,22 +237,12 @@ function unsetValues()
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="agreeTerms" name="terms" value="agree" required />
-                                <label for="agreeTerms">
-                                    I agree to the terms
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Register</button>
-                        </div>
-                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
                 </form>
 
-                <a href="login.php" class="text-center">I already have a membership</a>
+                <div class="mt-1">
+                    <a href="login.php" class="text-center">I already have a membership</a>
+                </div>
             </div>
         </div>
     </div>
