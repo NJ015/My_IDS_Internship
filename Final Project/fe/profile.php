@@ -6,6 +6,13 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+
+$role = $_SESSION["role"];
+
+if ($role == 'Guide' && $_SESSION['status'] == 2) {
+    $_SESSION['error_msg'] = 'Unfortunetly, you were rejected as a guide. This account will be deleted soon.';
+}
+
 if (isset($_SESSION['success_msg'])) {
     echo '<div style="background-color: #d4edda; color: #155724; padding: 10px;">';
     echo $_SESSION['success_msg'];
@@ -41,7 +48,7 @@ $tabs = array(
     )
 );
 
-$role = $_SESSION["role"];
+
 ?>
 
 <!DOCTYPE html>
@@ -214,12 +221,25 @@ $role = $_SESSION["role"];
                                                 </form>
                                             </span>
                                         </li>
+                                        <?php if ($role == 'Guide') {
+                                        ?>
+                                            <li class="list-group-item">
+                                                <b>Status</b>
+                                                <span class="float-right">
+                                                    <?php echo ($_SESSION['status'] == 1) ? 'Pending' : (($_SESSION['status'] == 0) ? 'Accepted' : 'Rejected'); ?>
+                                                    <a href="#" class="ml-5"></a>
+                                                </span>
+                                            </li>
+                                        <?php } elseif ($role == 'Admin') {
+                                        ?><li class="list-group-item">
+                                                <b>Position</b>
+                                                <span class="float-right">
+                                                    <?php echo $_SESSION['position']; ?>
+                                                    <a href="#" class="ml-5"></a>
+                                                </span>
+                                            </li>
+                                        <?php } ?>
                                     </ul>
-
-
-
-
-
                                 </div>
                             </div>
                         </div>
@@ -243,6 +263,8 @@ $role = $_SESSION["role"];
                                                     editAdmins();
                                                 } elseif ($tab === 'Guides') {
                                                     editGuides();
+                                                } elseif ($tab === 'Members') {
+                                                    editMembers();
                                                 } ?>
                                             </div>
                                         <?php } ?>

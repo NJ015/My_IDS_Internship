@@ -2,7 +2,7 @@
 session_start();
 include '../be/dbconfig.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
+if (!isset($_SESSION['user_id'])) {
     header("Location: ../fe/login.php");
     exit();
 }
