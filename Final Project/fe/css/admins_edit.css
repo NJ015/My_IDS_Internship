@@ -1,0 +1,25 @@
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.table2{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 300px;
+    border-radius: 8px;
+}
+
+/* .float-right, .float-left{
+    border: 0px;
+} */
+
+li{
+    border-left: 0px !important;
+    border-right: 0px !important;
+}

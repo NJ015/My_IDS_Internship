@@ -3,3 +3,8 @@ Guide_Status: 1: Pending
               2: Rejected
 
 Admin_Position: 0: Highest
+
+Event_Status: 0: Active
+              1: Pending
+              2: Canceled
+              3: Completed

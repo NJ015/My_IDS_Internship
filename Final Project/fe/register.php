@@ -31,7 +31,7 @@ function unsetValues()
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AdminLTE 3 | Registration Page (v2)</title>
+    <title>Registration Page</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
     <link rel="stylesheet" href="../adminlte/plugins/fontawesome-free/css/all.min.css" />
@@ -49,7 +49,7 @@ function unsetValues()
             <div class="card-body">
                 <p class="login-box-msg">Register a new membership</p>
 
-                <form action="../be/register.php" method="post">
+                <form action="../be/register.php" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="role">Role</label>
                         <div class="input-group mb-3">
@@ -214,12 +214,12 @@ function unsetValues()
                     </div>
 
                     <div class="form-group">
-                        <label for="photo">Photo URL</label>
+                        <label for="photo">Upload Photo</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="photo" id="photo" placeholder="https://robohash.org/robot" value="<?php echo isset($_SESSION['photo1']) ? $_SESSION['photo1'] : ''; ?>" />
+                            <input type="file" class="form-control" name="photo" id="photo" accept="image/*" required value="<?php echo isset($_SESSION['photo1']) ? $_SESSION['photo1'] : ''; ?>" />
                             <div class="input-group-append">
                                 <div class="input-group-text">
-                                    <span class="fas fa-briefcase"></span>
+                                    <span class="fas fa-file-image"></span>
                                 </div>
                             </div>
                         </div>

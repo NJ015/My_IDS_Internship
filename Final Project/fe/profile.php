@@ -29,22 +29,18 @@ if (isset($_SESSION['error_msg'])) {
 
 $tabs = array(
     'Admin' => array(
-        'Activity' => 'manage-activities',
         'Admins' => 'edit-admins',
         'Members' => 'edit-members',
         'Guides' => 'edit-guides',
-        'Events' => 'manage-events',
-        'Timeline' => 'view-timeline'
+        'Events' => 'manage-events'
     ),
     'Member' => array(
         'Activity' => 'view-activities',
-        'Timeline' => 'view-timeline',
-        'Settings' => 'edit-settings'
+        'Timeline' => 'view-timeline'
     ),
     'Guide' => array(
         'Activity' => 'view-guiding-activities',
-        'Timeline' => 'view-timeline',
-        'Settings' => 'edit-settings'
+        'Timeline' => 'view-timeline'
     )
 );
 
@@ -59,8 +55,8 @@ $tabs = array(
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User Profile</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="../adminlte/plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="../adminlte/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/adminlte.min.css">
     <link rel="stylesheet" href="css/profile.css">
 </head>
 
@@ -89,7 +85,7 @@ $tabs = array(
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <?php foreach ($tabs[$role] as $tab => $url) { ?>
                             <li class="nav-item">
-                                <a href="<?php echo $url; ?>" class="nav-link">
+                                <a href="#<?php echo strtolower(str_replace(' ', '-', $tab)); ?>" class="nav-link">
                                     <i class="nav-icon fas fa-<?php echo $tab === 'Activity' ? 'calendar' : ($tab === 'Timeline' ? 'history' : 'user'); ?>"></i>
                                     <p><?php echo $tab; ?></p>
                                 </a>
@@ -148,7 +144,7 @@ $tabs = array(
                                             <b>Profession</b>
                                             <span class="float-right">
                                                 <?php echo $_SESSION['profession']; ?>
-                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                <form method="POST" action="../be/edit_info.php" class="d-inline">
                                                     <input type="hidden" name="field" value="profession">
                                                     <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
                                                 </form>
@@ -158,7 +154,7 @@ $tabs = array(
                                             <b>Date of Birth</b>
                                             <span class="float-right">
                                                 <?php echo $_SESSION['dob']; ?>
-                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                <form method="POST" action="../be/edit_info.php" class="d-inline">
                                                     <input type="hidden" name="field" value="dob">
                                                     <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
                                                 </form>
@@ -168,7 +164,7 @@ $tabs = array(
                                             <b>Nationality</b>
                                             <span class="float-right">
                                                 <?php echo $_SESSION['nationality']; ?>
-                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                <form method="POST" action="../be/edit_info.php" class="d-inline">
                                                     <input type="hidden" name="field" value="nationality">
                                                     <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
                                                 </form>
@@ -185,7 +181,7 @@ $tabs = array(
                                             <b>Email</b>
                                             <span class="float-right">
                                                 <?php echo $_SESSION["email"]; ?>
-                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                <form method="POST" action="../be/edit_info.php" class="d-inline">
                                                     <input type="hidden" name="field" value="email">
                                                     <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
                                                 </form>
@@ -195,7 +191,7 @@ $tabs = array(
                                             <b>Password</b>
                                             <span class="float-right">
                                                 *********
-                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                <form method="POST" action="../be/edit_info.php" class="d-inline">
                                                     <input type="hidden" name="field" value="password">
                                                     <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
                                                 </form>
@@ -205,7 +201,7 @@ $tabs = array(
                                             <b>Phone Number</b>
                                             <span class="float-right">
                                                 <?php echo $_SESSION["phone_nb"]; ?>
-                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                <form method="POST" action="../be/edit_info.php" class="d-inline">
                                                     <input type="hidden" name="field" value="phone_nb">
                                                     <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
                                                 </form>
@@ -215,7 +211,7 @@ $tabs = array(
                                             <b>Emergency Number</b>
                                             <span class="float-right">
                                                 <?php echo $_SESSION["em_nb"]; ?>
-                                                <form method="POST" action="edit_info.php" class="d-inline">
+                                                <form method="POST" action="../be/edit_info.php" class="d-inline">
                                                     <input type="hidden" name="field" value="em_nb">
                                                     <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
                                                 </form>
@@ -265,6 +261,8 @@ $tabs = array(
                                                     editGuides();
                                                 } elseif ($tab === 'Members') {
                                                     editMembers();
+                                                } elseif ($tab === 'Events') {
+                                                    manageEvents();
                                                 } ?>
                                             </div>
                                         <?php } ?>

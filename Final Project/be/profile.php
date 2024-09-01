@@ -47,72 +47,6 @@ if ($user) {
     exit();
 }
 
-// $action = isset($_GET['action']) ? $_GET['action'] : '';
-
-// switch ($action) {
-//     case 'edit-admins':
-//         if ($_SESSION['role'] === 'Admin') {
-//             editAdmins();
-//         } else {
-//             unauthorizedAccess();
-//         }
-//         break;
-//     case 'manage-activities':
-//         if ($_SESSION['role'] === 'Admin') {
-//             manageActivities();
-//         } else {
-//             unauthorizedAccess();
-//         }
-//         break;
-//     case 'edit-members':
-//         if ($_SESSION['role'] === 'Admin') {
-//             editMembers();
-//         } else {
-//             unauthorizedAccess();
-//         }
-//         break;
-//     case 'edit-guides':
-//         if ($_SESSION['role'] === 'Admin') {
-//             editGuides();
-//         } else {
-//             unauthorizedAccess();
-//         }
-//         break;
-//     case 'manage-events':
-//         if ($_SESSION['role'] === 'Admin') {
-//             manageEvents();
-//         } else {
-//             unauthorizedAccess();
-//         }
-//         break;
-//     case 'view-timeline':
-//         viewTimeline();
-//         break;
-//     case 'view-activities':
-//         if ($_SESSION['role'] === 'Member') {
-//             viewActivities();
-//         } else {
-//             unauthorizedAccess();
-//         }
-//         break;
-//     case 'edit-settings':
-//         if ($_SESSION['role'] === 'Member' || $_SESSION['role'] === 'Guide') {
-//             editSettings();
-//         } else {
-//             unauthorizedAccess();
-//         }
-//         break;
-//     case 'view-guiding-activities':
-//         if ($_SESSION['role'] === 'Guide') {
-//             viewGuidingActivities();
-//         } else {
-//             unauthorizedAccess();
-//         }
-//         break;
-//         // default:
-//         //     echo "Invalid action.";
-//         //     break;
-// }
 
 function getUserById($user_id)
 {
@@ -173,11 +107,17 @@ function editAdmins()
 {
     global $conn;
 
+    $current_position = $_SESSION['position'];
+
     $sql = "SELECT USERS.ID, FirstName, LastName, Email
             FROM USERS 
-            INNER JOIN ADMIN ON USERS.ID = ADMIN.UserID";
+            INNER JOIN ADMIN ON USERS.ID = ADMIN.UserID
+            WHERE ADMIN.Position > ?";
 
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $current_position);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
 ?>
@@ -194,15 +134,18 @@ function editAdmins()
                 while ($row = $result->fetch_assoc()) {
                 ?>
                     <tr>
-                        <td><?php echo $row['FirstName'] . ' ' . $row['LastName']; ?></td>
-                        <td><?php echo $row['Email']; ?></td>
+                        <td><?php echo htmlspecialchars($row['FirstName'] . ' ' . $row['LastName']); ?></td>
+                        <td><?php echo htmlspecialchars($row['Email']); ?></td>
                         <td>
-
-                            <form method="POST" action="../be/delete_admins.php" style="display:inline;">
-                                <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            <form method="POST" action="../be/admins_edit.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['ID']); ?>">
+                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
                             </form>
 
+                            <form method="POST" action="../be/delete_admins.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['ID']); ?>">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 <?php
@@ -216,12 +159,11 @@ function editAdmins()
         <p>No admins found.</p>
     <?php
     }
+
+    $stmt->close();
 }
 
-function manageActivities()
-{
-    echo '<h1>Manage Activities</h1>';
-}
+
 
 function editMembers()
 {
@@ -251,6 +193,11 @@ function editMembers()
                         <td><?php echo $row['FirstName'] . ' ' . $row['LastName']; ?></td>
                         <td><?php echo $row['Email']; ?></td>
                         <td>
+                            <form method="POST" action="../be/admins_edit.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
+                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                            </form>
+
                             <form method="POST" action="../be/delete_members.php" style="display:inline;">
                                 <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -269,6 +216,7 @@ function editMembers()
     <?php
     }
 }
+
 
 function editGuides()
 {
@@ -349,6 +297,11 @@ function editGuides()
                         <td><?php echo $row['FirstName'] . ' ' . $row['LastName']; ?></td>
                         <td><?php echo $row['Email']; ?></td>
                         <td>
+                            <form method="POST" action="../be/admins_edit.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
+                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                            </form>
+
                             <form method="POST" action="../be/delete_guides.php" style="display:inline;">
                                 <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -375,6 +328,10 @@ function manageEvents()
 }
 
 
+function manageActivities()
+{
+    echo '<h1>Manage Activities</h1>';
+}
 
 function viewTimeline()
 {

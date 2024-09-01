@@ -28,22 +28,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         $_SESSION['e_error'] = "This email is already registered.";
-        setvalues();
+        setValues();
         header("Location: ../fe/register.php");
         exit();
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['e_error'] = "Invalid email format";
-        setvalues();
+        setValues();
         header("Location: ../fe/register.php");
         exit();
     }
-    
 
+    // Check if passwords match
     if ($_POST["password"] !== $_POST["confirmPassword"]) {
         $_SESSION['cpass_error'] = "Passwords do not match";
-        setvalues();
-        header("Location:../fe/register.php");
+        setValues();
+        header("Location: ../fe/register.php");
         exit();
     }
 
@@ -51,28 +51,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dob = $_POST['dob'];
     $joining_date = date('Y-m-d');
     $profession = isset($_POST['profession']) ? $_POST['profession'] : null;
-    $photo = "https://robohash.org/" . urlencode($email);
-    
+
+    $target_dir = "../assets/images/";
+    $photo = $target_dir . basename($_FILES["photo"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($photo, PATHINFO_EXTENSION));
+
+    $check = getimagesize($_FILES["photo"]["tmp_name"]);
+    if ($check !== false) {
+        $uploadOk = 1;
+    } else {
+        $_SESSION['error_msg'] = "File is not an image.";
+        $uploadOk = 0;
+    }
+
+    if (file_exists($photo)) {
+        $_SESSION['error_msg'] = "Sorry, file already exists.";
+        $uploadOk = 0;
+    }
+
+    if ($_FILES["photo"]["size"] > 5000000) {
+        $_SESSION['error_msg'] = "Sorry, your file is too large.";
+        $uploadOk = 0;
+    }
+
+    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+        $_SESSION['error_msg'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $uploadOk = 0;
+    }
+
+    if ($uploadOk == 0) {
+        setValues();
+        header("Location: ../fe/register.php");
+        exit();
+    } else {
+        if (!move_uploaded_file($_FILES["photo"]["tmp_name"], $photo)) {
+            $_SESSION['error_msg'] = "Sorry, there was an error uploading your file.";
+            setValues();
+            header("Location: ../fe/register.php");
+            exit();
+        }
+    }
+
     $emergency_number = isset($_POST['emergency_number']) ? $_POST['emergency_number'] : null;
     $phone_nb = $_POST['phone_nb'];
     if (!preg_match('/^\+?(\d)+$/', $phone_nb)) {
-        $error_message = "Phone numbers must contain only numbers or (+) sign.";
         $_SESSION['phone_error'] = "Invalid phone number";
-        setvalues();
+        setValues();
         header("Location: ../fe/register.php");
         exit();
     }
     if (!preg_match('/^\+?(\d)+$/', $emergency_number)) {
-        $error_message = "Phone numbers must contain only numbers or (+) sign.";
-        $_SESSION['em_nb_error'] = "Invalid phone number";
-        setvalues();
+        $_SESSION['em_nb_error'] = "Invalid emergency number";
+        setValues();
         header("Location: ../fe/register.php");
         exit();
     }
 
     $nationality = isset($_POST['nationality']) ? $_POST['nationality'] : null;
-
-
 
     $dobDate = new DateTime($dob);
     $today = new DateTime();
@@ -108,7 +144,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             echo "Registration successful!";
             unsetValues();
-            header("Location:../fe/login.php");
+            header("Location: ../fe/login.php");
+            exit();
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -119,9 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 }
 
-
-
-function setvalues()
+function setValues()
 {
     $_SESSION["role1"] = $_POST['role'];
     $_SESSION["gender1"] = $_POST['gender'];
@@ -136,8 +171,6 @@ function setvalues()
     $_SESSION["phone_nb1"] = $_POST['phone_nb'];
     $_SESSION["nationality1"] = $_POST['nationality'];
 }
-
-
 
 function unsetValues()
 {
@@ -154,4 +187,3 @@ function unsetValues()
     unset($_SESSION["phone_nb1"]);
     unset($_SESSION["nationality1"]);
 }
-
