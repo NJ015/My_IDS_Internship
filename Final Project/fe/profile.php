@@ -85,7 +85,7 @@ $tabs = array(
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <?php foreach ($tabs[$role] as $tab => $url) { ?>
                             <li class="nav-item">
-                                <a href="#<?php echo strtolower(str_replace(' ', '-', $tab)); ?>" class="nav-link">
+                                <a href="#<?php echo strtolower(str_replace(' ', '-', $tab)); ?>" data-toggle="tab" class="nav-link">
                                     <i class="nav-icon fas fa-<?php echo $tab === 'Activity' ? 'calendar' : ($tab === 'Timeline' ? 'history' : 'user'); ?>"></i>
                                     <p><?php echo $tab; ?></p>
                                 </a>
