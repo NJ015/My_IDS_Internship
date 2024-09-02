@@ -1,0 +1,10 @@
+.manage-events-box {
+  margin: 10% auto;
+  padding-top: 8%;
+  padding-bottom: 3%;
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+}

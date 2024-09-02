@@ -324,7 +324,142 @@ function editGuides()
 
 function manageEvents()
 {
-    echo '<h1>Manage Events</h1>';
+    global $conn;
+
+    // Get the current date
+    $current_date = date('Y-m-d');
+
+    // Update events to "Completed" if the status is "Active" and the Date_to has passed
+    $update_sql = "UPDATE EVENTS SET Status = 3 WHERE Status = 0 AND Date_to < ?";
+    $update_stmt = $conn->prepare($update_sql);
+    $update_stmt->bind_param("s", $current_date);
+    $update_stmt->execute();
+    $update_stmt->close();
+
+    ?>
+    <div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="../be/add_event.php">Add Event</a></li>
+        </ol>
+    </div>
+
+    <div class="accordion" id="eventAccordion">
+        <?php
+        $statuses = [
+            0 => 'Active',
+            1 => 'Pending',
+            2 => 'Canceled',
+            3 => 'Completed'
+        ];
+
+        foreach ($statuses as $status_code => $status_name) {
+            $stmt = $conn->prepare("SELECT * FROM EVENTS WHERE Status = ?");
+            $stmt->bind_param("i", $status_code);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+        ?>
+                <div class="card">
+                    <div class="card-header" id="heading<?php echo $status_code; ?>">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<?php echo $status_code; ?>" aria-expanded="true" aria-controls="collapse<?php echo $status_code; ?>">
+                                <?php echo $status_name; ?> Events
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse<?php echo $status_code; ?>" class="collapse" aria-labelledby="heading<?php echo $status_code; ?>" data-parent="#eventAccordion">
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Event Name</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    while ($row = $result->fetch_assoc()) {
+                                    ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($row['Name']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['Date_from']) . " --> " . htmlspecialchars($row['Date_to']); ?></td>
+                                            <td>
+                                                <form method="POST" action="../be/view_event.php" style="display:inline;">
+                                                    <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
+                                                    <button type="submit" class="btn btn-info btn-sm">View</button>
+                                                </form>
+
+                                                <?php if ($status_code == 0) { // Active 
+                                                ?>
+                                                    <form method="POST" action="../be/manage_event.php" style="display:inline;">
+                                                        <input type="hidden" name="event_id" value="<?php echo $row['ID']; ?>">
+                                                        <button type="submit" class="btn btn-warning btn-sm">Manage</button>
+                                                    </form>
+                                                    <form method="POST" action="../be/cancel_event.php" style="display:inline;">
+                                                        <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
+                                                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                                    </form>
+                                                <?php } ?>
+
+                                                <?php if ($status_code == 1 || $status_code == 2) { // Pending or Canceled 
+                                                ?>
+                                                    <form method="POST" action="../be/activate_event.php" style="display:inline;">
+                                                        <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
+                                                        <button type="submit" class="btn btn-success btn-sm">Activate</button>
+                                                    </form>
+                                                    <form method="POST" action="../be/delete_event.php" style="display:inline;">
+                                                        <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
+                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                    </form>
+                                                <?php } ?>
+
+                                                <?php if ($status_code == 3) { // Completed 
+                                                ?>
+                                                    <form method="POST" action="../be/delete_event.php" style="display:inline;">
+                                                        <input type="hidden" name="id" value="<?php echo $row['ID']; ?>">
+                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                    </form>
+                                                <?php } ?>
+
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <?php
+            } else {
+            ?>
+                <div class="card">
+                    <div class="card-header" id="heading<?php echo $status_code; ?>">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<?php echo $status_code; ?>" aria-expanded="true" aria-controls="collapse<?php echo $status_code; ?>">
+                                <?php echo $status_name; ?> Events
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapse<?php echo $status_code; ?>" class="collapse" aria-labelledby="heading<?php echo $status_code; ?>" data-parent="#eventAccordion">
+                        <div class="card-body">
+                            <p>No events found under <?php echo $status_name; ?>.</p>
+                        </div>
+                    </div>
+                </div>
+        <?php
+            }
+
+            $stmt->close();
+        }
+        ?>
+    </div>
+
+    <script src="../assets/plugins/jquery/jquery.min.js"></script>
+    <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<?php
 }
 
 

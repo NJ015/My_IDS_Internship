@@ -1,14 +1,12 @@
 <?php
 session_start();
-//add l validation lal inputs important!!!!!!!!!!!!
-//fix the date-diff/age stuff important!!!!!!!!!!!!
-
 require_once 'dbconfig.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $role = $_POST['role'];
     $gender = $_POST['gender'];
 
+    // Map gender to ID
     $genderID = ($gender == 'M') ? 1 : ($gender == 'F' ? 2 : null);
 
     if ($genderID === null) {
@@ -20,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $lastName = $_POST['lastName'];
     $email = $_POST['email'];
 
+    // Check if email is already registered
     $checkEmailSql = "SELECT * FROM USERS WHERE Email = ?";
     $stmt = $conn->prepare($checkEmailSql);
     $stmt->bind_param("s", $email);
@@ -52,11 +51,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $joining_date = date('Y-m-d');
     $profession = isset($_POST['profession']) ? $_POST['profession'] : null;
 
+    // Handle photo upload
     $target_dir = "../assets/images/";
     $photo = $target_dir . basename($_FILES["photo"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($photo, PATHINFO_EXTENSION));
 
+    // Check if image file is an actual image or fake image
     $check = getimagesize($_FILES["photo"]["tmp_name"]);
     if ($check !== false) {
         $uploadOk = 1;
@@ -65,26 +66,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $uploadOk = 0;
     }
 
+    // Check if file already exists
     if (file_exists($photo)) {
         $_SESSION['error_msg'] = "Sorry, file already exists.";
         $uploadOk = 0;
     }
 
+    // Check file size (limit to 5MB)
     if ($_FILES["photo"]["size"] > 5000000) {
         $_SESSION['error_msg'] = "Sorry, your file is too large.";
         $uploadOk = 0;
     }
 
+    // Allow certain file formats
     if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
         $_SESSION['error_msg'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
         $uploadOk = 0;
     }
 
+    // If file upload failed
     if ($uploadOk == 0) {
         setValues();
         header("Location: ../fe/register.php");
         exit();
     } else {
+        // If everything is ok, try to upload file
         if (!move_uploaded_file($_FILES["photo"]["tmp_name"], $photo)) {
             $_SESSION['error_msg'] = "Sorry, there was an error uploading your file.";
             setValues();
@@ -95,6 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $emergency_number = isset($_POST['emergency_number']) ? $_POST['emergency_number'] : null;
     $phone_nb = $_POST['phone_nb'];
+
+    // Validate phone numbers
     if (!preg_match('/^\+?(\d)+$/', $phone_nb)) {
         $_SESSION['phone_error'] = "Invalid phone number";
         setValues();
@@ -110,12 +118,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $nationality = isset($_POST['nationality']) ? $_POST['nationality'] : null;
 
+    // Calculate age
     $dobDate = new DateTime($dob);
     $today = new DateTime();
     $age = $today->diff($dobDate)->y;
 
     $dobFormatted = $dobDate->format('Y-m-d');
 
+    // Insert data into USERS table
     $query = "INSERT INTO USERS (Role, GenderID, FirstName, MiddleName, LastName, Email, Password, DOB, Age, Joining_Date, Profession, Photo, Emergency_number, Phone_nb, Nationality) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("sissssssissssss", $role, $genderID, $firstName, $middleName, $lastName, $email, $password, $dobFormatted, $age, $joining_date, $profession, $photo, $emergency_number, $phone_nb, $nationality);
@@ -123,6 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         $userID = $conn->insert_id;
 
+        // Insert into respective role table
         if ($role == 'Admin') {
             $query = "INSERT INTO ADMIN (UserID) VALUES (?)";
             $stmt = $conn->prepare($query);
@@ -156,6 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 }
 
+// Functions to set and unset form values
 function setValues()
 {
     $_SESSION["role1"] = $_POST['role'];
