@@ -91,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['field']) && isset($_P
             $conn->close();
 
             unset($_SESSION['field']);
+            
             header("Location: view_event.php");
             exit();
         } else {

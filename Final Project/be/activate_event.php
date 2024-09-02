@@ -23,10 +23,10 @@ if (isset($_POST['confirm_activate']) && $_POST['confirm_activate'] === 'yes' &&
     $stmt->close();
     $conn->close();
 
-    header('Location: ../be/manage_events.php'); // Redirect to your manage events page
+    header('Location: ../fe/profile.php'); // Redirect to your manage events page
     exit();
 } elseif (isset($_POST['confirm_activate']) && $_POST['confirm_activate'] === 'no') {
-    header('Location: ../be/manage_events.php'); // Redirect to your manage events page
+    header('Location: ../fe/profile.php'); // Redirect to your manage events page
 }
 ?>
 

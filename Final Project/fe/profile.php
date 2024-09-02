@@ -58,6 +58,7 @@ $tabs = array(
     <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/adminlte.min.css">
     <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/timeline-activity.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -263,6 +264,14 @@ $tabs = array(
                                                     editMembers();
                                                 } elseif ($tab === 'Events') {
                                                     manageEvents();
+                                                } elseif ($tab === 'Activity' && $role==='Guide') {
+                                                    manageActivityGuide();
+                                                } elseif ($tab === 'Activity' && $role==='Member') {
+                                                    manageActivityMember();
+                                                } elseif ($tab === 'Timeline' && $role==='Guide') {
+                                                    manageTimelineGuide();
+                                                } elseif ($tab === 'Timeline' && $role==='Member') {
+                                                    manageTimelineMember();
                                                 } ?>
                                             </div>
                                         <?php } ?>

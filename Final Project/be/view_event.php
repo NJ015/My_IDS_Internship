@@ -6,12 +6,12 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../fe/login.php");
     exit();
 }
-if(isset($_SESSION['event_id'])){
+if (isset($_SESSION['event_id'])) {
     $eventID = $_SESSION['event_id'];
-}
-if ( isset($_POST['id'])) {
+} elseif (isset($_POST['id'])) {
     $eventID = $_POST['id'];
-
+}
+if (isset($eventID)) {
     // Prepare the SQL statement
     $stmt = $conn->prepare("SELECT * FROM EVENTS WHERE ID = ?");
     $stmt->bind_param("i", $eventID);
@@ -98,13 +98,15 @@ $conn->close(); // Close the database connection
                             } else {
                                 echo htmlspecialchars($event[$dbField]);
                             }
-                            ?>
-                            <form method="POST" action="edit_event.php" class="d-inline">
-                                <input type="hidden" name="field" value="<?php echo $dbField; ?>">
-                                <input type="hidden" name="id" value="<?php echo $eventID; ?>">
-                                <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
-                            </form>
-                            <?php
+                            if ($_SESSION['role'] == 'Admin') {
+                        ?>
+                                <form method="POST" action="edit_event.php" class="d-inline">
+                                    <input type="hidden" name="field" value="<?php echo $dbField; ?>">
+                                    <input type="hidden" name="id" value="<?php echo $eventID; ?>">
+                                    <button type="submit" class="ml-4 btn btn-link p-0"><i class="fas fa-edit"></i></button>
+                                </form>
+                        <?php
+                            }
                             echo '</span></li>';
                         }
                         ?>

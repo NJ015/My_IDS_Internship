@@ -28,6 +28,7 @@ if ($user) {
     switch ($user['Role']) {
         case 'Admin':
             $_SESSION['position'] = getAdminPosition($user_id);
+            break;
         case 'Member':
             $_SESSION['joined_events'] = getMemberEvents($user_id);
             $_SESSION['responsible_events'] = null;
@@ -463,32 +464,161 @@ function manageEvents()
 }
 
 
-function manageActivities()
+
+function manageActivityGuide()
 {
-    echo '<h1>Manage Activities</h1>';
+    global $conn;
+
+    $guideID = $_SESSION['user_id']; // Assuming the guide's UserID is stored in the session
+
+    $query = "SELECT e.ID, e.Name, e.Description, e.Date_from, e.Date_to, e.Time_from, e.Time_to 
+              FROM events e
+              INNER JOIN guide_event ge ON e.ID = ge.EventID
+              WHERE ge.GuideID = ? AND e.Date_to < CURDATE()";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $guideID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+?>
+    <ul class="activity-list">
+        <?php
+        while ($row = $result->fetch_assoc()) {
+        ?>
+            <li>
+                <form method="POST" action="../be/view_event.php">
+                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['ID']); ?>">
+                    <button type="submit" class="event-link">
+                        <h4><strong><?php echo htmlspecialchars($row['Name']); ?></strong></h4>
+                        <p><?php echo htmlspecialchars($row['Description']); ?></p>
+                        <p><strong>Date:</strong> <?php echo htmlspecialchars($row['Date_from']); ?> to <?php echo htmlspecialchars($row['Date_to']); ?> | <strong>Time:</strong> <?php echo htmlspecialchars($row['Time_from']); ?> to <?php echo htmlspecialchars($row['Time_to']); ?></p>
+                    </button>
+                </form>
+            </li>
+        <?php
+        }
+        ?>
+    </ul>
+<?php
 }
 
-function viewTimeline()
+
+function manageTimelineGuide()
 {
-    echo '<h1>View Timeline</h1>';
+    global $conn;
+
+    $guideID = $_SESSION['user_id'];
+
+    $query = "SELECT e.ID, e.Name, e.Date_from, e.Time_from
+              FROM events e
+              INNER JOIN guide_event ge ON e.ID = ge.EventID
+              WHERE ge.GuideID = ? AND e.Date_from >= CURDATE()
+              ORDER BY e.Date_from ASC";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $guideID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    ?>
+    <div class="timeline">
+        <?php
+        while ($row = $result->fetch_assoc()) {
+        ?>
+            <div class="timeline-item">
+                <form method="POST" action="../be/view_event.php">
+                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['ID']); ?>">
+                    <button type="submit" class="event-link">
+                        <div class="timeline-date"><?php echo htmlspecialchars($row['Date_from']); ?></div>
+                        <div class="timeline-content">
+                            <h4><?php echo htmlspecialchars($row['Name']); ?></h4>
+                            <p><strong>Start Time:</strong> <?php echo htmlspecialchars($row['Time_from']); ?></p>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        <?php
+        }
+        ?>
+    </div>
+<?php
 }
 
-function viewActivities()
+
+function manageActivityMember()
 {
-    echo '<h1>View Activities</h1>';
+    global $conn;
+
+    $memberID = $_SESSION['user_id'];
+
+    $query = "SELECT e.ID, e.Name, e.Description, e.Date_from, e.Date_to, e.Time_from, e.Time_to 
+              FROM events e
+              INNER JOIN member_event me ON e.ID = me.EventID
+              WHERE me.MemberID = ? AND e.Date_to < CURDATE()";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $memberID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    ?>
+    <ul class="activity-list">
+        <?php
+        while ($row = $result->fetch_assoc()) {
+        ?>
+            <li>
+                <form method="POST" action="../be/view_event.php">
+                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['ID']); ?>">
+                    <button type="submit" class="event-link">
+                        <h4><strong><?php echo htmlspecialchars($row['Name']); ?></strong></h4>
+                        <p><?php echo htmlspecialchars($row['Description']); ?></p>
+                        <p><strong>Date:</strong> <?php echo htmlspecialchars($row['Date_from']); ?> to <?php echo htmlspecialchars($row['Date_to']); ?> | <strong>Time:</strong> <?php echo htmlspecialchars($row['Time_from']); ?> to <?php echo htmlspecialchars($row['Time_to']); ?></p>
+                    </button>
+                </form>
+            </li>
+        <?php
+        }
+        ?>
+    </ul>
+<?php
 }
 
-function editSettings()
+
+function manageTimelineMember()
 {
-    echo '<h1>Edit Settings</h1>';
+    global $conn;
+
+    $memberID = $_SESSION['user_id'];
+
+    $query = "SELECT e.ID, e.Name, e.Date_from, e.Time_from
+              FROM events e
+              INNER JOIN member_event me ON e.ID = me.EventID
+              WHERE me.MemberID = ? AND e.Date_from >= CURDATE()
+              ORDER BY e.Date_from ASC";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $memberID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    ?>
+    <div class="timeline">
+        <?php
+        while ($row = $result->fetch_assoc()) {
+        ?>
+            <div class="timeline-item">
+                <form method="POST" action="../be/view_event.php">
+                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['ID']); ?>">
+                    <button type="submit" class="event-link">
+                        <div class="timeline-date"><?php echo htmlspecialchars($row['Date_from']); ?></div>
+                        <div class="timeline-content">
+                            <h4><?php echo htmlspecialchars($row['Name']); ?></h4>
+                            <p><strong>Time:</strong> <?php echo htmlspecialchars($row['Time_from']); ?></p>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        <?php
+        }
+        ?>
+    </div>
+<?php
 }
 
-function viewGuidingActivities()
-{
-    echo '<h1>View Guiding Activities</h1>';
-}
-
-function unauthorizedAccess()
-{
-    echo '<h1>Unauthorized Access</h1>';
-}

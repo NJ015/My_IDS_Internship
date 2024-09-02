@@ -23,10 +23,10 @@ if (isset($_POST['confirm_cancel']) && $_POST['confirm_cancel'] === 'yes' && iss
     $stmt->close();
     $conn->close();
 
-    header('Location: ../be/manage_events.php'); // Redirect to your manage events page
+    header('Location: ../fe/profile.php'); // Redirect to your manage events page
     exit();
 } elseif (isset($_POST['confirm_cancel']) && $_POST['confirm_cancel'] === 'no') {
-    header('Location: ../be/manage_events.php'); // Redirect to your manage events page
+    header('Location: ../fe/profile.php'); // Redirect to your manage events page
 }
 ?>
 
